@@ -1,0 +1,507 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Tradezies - Buy, Sell & Trade</title>
+<style>
+:root {
+  --green:#21b66f;
+  --dark:#101b22;
+  --background:#f3f6f7;
+}
+* {box-sizing:border-box}
+body {
+  margin:0;
+  font-family:Arial,sans-serif;
+  background:var(--background);
+  color:#18252b;
+}
+header {
+  background:var(--dark);
+  padding:18px 16px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+}
+.logo {
+  color:white;
+  font-size:29px;
+  font-weight:900;
+  letter-spacing:-1.2px;
+}
+.logo span {color:var(--green)}
+button {cursor:pointer;font-weight:bold}
+header button, .primary {
+  border:0;
+  border-radius:10px;
+  background:var(--green);
+  color:#072015;
+  padding:12px 17px;
+}
+.hero {
+  background:linear-gradient(135deg,#172c36,#0c171c);
+  color:white;
+  padding:34px 18px;
+  text-align:center;
+}
+.hero h1 {
+  font-size:30px;
+  margin:0 0 10px;
+}
+.hero p {color:#cbd6d8}
+.search {
+  display:flex;
+  max-width:600px;
+  margin:22px auto 0;
+  gap:8px;
+}
+input,select,textarea {
+  font:inherit;
+  border:1px solid #d2dadd;
+  border-radius:9px;
+  padding:13px;
+  width:100%;
+}
+.search input {flex:1;min-width:0}
+.search button {
+  background:var(--green);
+  border:0;
+  border-radius:9px;
+  padding:0 17px;
+}
+.container {
+  max-width:1100px;
+  margin:auto;
+  padding:22px 15px 95px;
+}
+.categories {
+  display:flex;
+  gap:9px;
+  overflow-x:auto;
+  padding:5px 0 18px;
+}
+.categories button {
+  flex-shrink:0;
+  border:1px solid #d7dfe0;
+  background:white;
+  border-radius:22px;
+  padding:11px 15px;
+}
+.categories button.active {
+  background:#d5f8e5;
+  border-color:var(--green);
+}
+.section-title {
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:12px;
+}
+.grid {
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:13px;
+}
+.card {
+  background:white;
+  border-radius:13px;
+  overflow:hidden;
+  box-shadow:0 2px 10px #0000000b;
+}
+.photo {
+  height:145px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:60px;
+  background:#e6efec;
+  overflow:hidden;
+}
+.photo img {
+  width:100%;
+  height:100%;
+  object-fit:cover;
+}
+.card-content {padding:13px}
+.price {
+  font-size:21px;
+  font-weight:800;
+  color:#14844c;
+}
+.card h3 {
+  font-size:15px;
+  margin:9px 0;
+}
+.muted {color:#66757a;font-size:12px}
+.tag {
+  display:inline-block;
+  background:#e4f8ed;
+  color:#147c4b;
+  padding:5px 8px;
+  border-radius:6px;
+  font-size:11px;
+  margin-top:8px;
+}
+.card button {
+  width:100%;
+  margin-top:12px;
+  padding:10px;
+  background:white;
+  border:1px solid var(--green);
+  color:#14844c;
+  border-radius:8px;
+}
+nav {
+  position:fixed;
+  bottom:0;
+  left:0;
+  right:0;
+  background:white;
+  border-top:1px solid #dfe5e6;
+  display:flex;
+  justify-content:space-around;
+  padding:12px 0;
+  z-index:5;
+}
+nav button {
+  background:none;
+  border:0;
+  font-size:12px;
+  color:#324047;
+}
+.modal {
+  display:none;
+  position:fixed;
+  inset:0;
+  background:#0009;
+  z-index:10;
+  padding:16px;
+  overflow:auto;
+}
+.modal.open {display:block}
+.dialog {
+  background:white;
+  max-width:470px;
+  margin:30px auto;
+  border-radius:16px;
+  padding:22px;
+}
+.dialog input,.dialog select,
+.dialog textarea {margin:7px 0}
+.dialog .primary {width:100%;margin-top:12px}
+.close {
+  float:right;
+  border:0;
+  background:none;
+  font-size:25px;
+}
+#preview {
+  display:none;
+  max-width:100%;
+  max-height:170px;
+  margin:10px auto;
+  border-radius:10px;
+}
+.empty {
+  padding:35px;
+  text-align:center;
+  color:#637277;
+}
+@media(min-width:700px) {
+  .grid {grid-template-columns:repeat(4,1fr)}
+  .photo {height:190px}
+  nav {display:none}
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">Trade<span>zies</span></div>
+  <button onclick="openPost()">+ Sell / Trade</button>
+</header>
+
+<section class="hero">
+  <h1>Buy it. Sell it. Trade it.</h1>
+  <p>Your community marketplace for great deals.</p>
+  <div class="search">
+    <input id="search" placeholder="What are you looking for?"
+      oninput="render()">
+    <button onclick="render()">Search</button>
+  </div>
+</section>
+
+<main class="container">
+  <div class="categories" id="categories"></div>
+
+  <div class="section-title">
+    <h2>Explore Listings</h2>
+    <span class="muted" id="count"></span>
+  </div>
+
+  <div class="grid" id="listings"></div>
+</main>
+
+<nav>
+  <button onclick="showAll()">🏠 Home</button>
+  <button onclick="document.getElementById('search').focus()">
+    🔎 Search
+  </button>
+  <button onclick="openPost()">➕ Post</button>
+  <button onclick="showMine()">👤 My Listings</button>
+</nav>
+
+<div class="modal" id="postModal">
+ <div class="dialog">
+  <button class="close" onclick="closePost()">×</button>
+  <h2>Post an Item</h2>
+  <p class="muted">Create a new Tradezies listing.</p>
+  <form id="postForm">
+    <input id="itemTitle" placeholder="Item title"
+      maxlength="80" required>
+    <input id="itemPrice" type="number" min="0"
+      step="0.01" placeholder="Price in CAD" required>
+    <select id="itemCategory">
+      <option>Vehicles</option>
+      <option>Equipment</option>
+      <option>Electronics</option>
+      <option>Home</option>
+      <option>Clothing</option>
+      <option>Other</option>
+    </select>
+    <select id="itemType">
+      <option value="For Sale">For Sale</option>
+      <option value="Trade">Trade</option>
+      <option value="Sale or Trade">Sale or Trade</option>
+    </select>
+    <input id="itemLocation"
+      placeholder="City or town" required>
+    <textarea id="itemDescription" rows="3"
+      placeholder="Describe your item"></textarea>
+    <label>Item photo</label>
+    <input type="file" id="itemPhoto"
+      accept="image/*">
+    <img id="preview" alt="Photo preview">
+    <button class="primary" type="submit">
+      Publish Listing
+    </button>
+  </form>
+ </div>
+</div>
+
+<script>
+const categories = [
+  "All","Vehicles","Equipment","Electronics",
+  "Home","Clothing","Other"
+];
+const emojis = {
+  Vehicles:"🚗",Equipment:"🚜",
+  Electronics:"📱",Home:"🏡",
+  Clothing:"👕",Other:"📦"
+};
+
+const samples = [
+  {
+    id:"demo1",title:"Pickup Truck",
+    price:18500,category:"Vehicles",
+    type:"Sale or Trade",location:"Edmonton, AB",
+    description:"Example vehicle listing."
+  },
+  {
+    id:"demo2",title:"Skid Steer Loader",
+    price:12000,category:"Equipment",
+    type:"For Sale",location:"Leduc, AB",
+    description:"Example equipment listing."
+  },
+  {
+    id:"demo3",title:"Gaming Console",
+    price:350,category:"Electronics",
+    type:"Trade",location:"Calgary, AB",
+    description:"Example electronics listing."
+  },
+  {
+    id:"demo4",title:"Living Room Sofa",
+    price:400,category:"Home",
+    type:"For Sale",location:"Edmonton, AB",
+    description:"Example furniture listing."
+  }
+];
+
+let selected="All";
+let mineOnly=false;
+let saved=[];
+
+try {
+  saved=JSON.parse(
+    localStorage.getItem("tradeziesListings")||"[]"
+  );
+  if(!Array.isArray(saved)) saved=[];
+} catch(e) {
+  saved=[];
+}
+
+function escapeHTML(value) {
+  return String(value).replace(/[&<>"']/g,
+    c=>({
+      "&":"&amp;","<":"&lt;",">":"&gt;",
+      '"':"&quot;","'":"&#39;"
+    })[c]
+  );
+}
+
+function renderCategories() {
+  document.getElementById("categories").innerHTML=
+    categories.map(c=>`
+      <button class="${c===selected?'active':''}"
+        onclick="chooseCategory('${c}')">
+        ${c}
+      </button>
+    `).join("");
+}
+
+function chooseCategory(c) {
+  selected=c;
+  render();
+}
+
+function render() {
+  const q=document.getElementById("search")
+    .value.toLowerCase().trim();
+  const data=mineOnly?saved:[...saved,...samples];
+
+  const filtered=data.filter(item=>
+    (selected==="All"||item.category===selected) &&
+    (item.title+" "+item.description+" "+
+      item.location).toLowerCase().includes(q)
+  );
+
+  document.getElementById("count").textContent=
+    filtered.length+" items";
+
+  document.getElementById("listings").innerHTML=
+    filtered.length
+    ? filtered.map(item=>`
+      <article class="card">
+        <div class="photo">
+          ${item.photo
+            ? `<img src="${item.photo}" alt="Item photo">`
+            : emojis[item.category]||"📦"}
+        </div>
+        <div class="card-content">
+          <div class="price">
+            $${Number(item.price).toLocaleString(
+              "en-CA",{maximumFractionDigits:2})}
+          </div>
+          <h3>${escapeHTML(item.title)}</h3>
+          <div class="muted">
+            📍 ${escapeHTML(item.location)}
+          </div>
+          <span class="tag">${escapeHTML(item.type)}</span>
+          <button onclick="viewItem('${item.id}')">
+            View Details
+          </button>
+        </div>
+      </article>
+    `).join("")
+    : '<div class="empty">No listings found.</div>';
+
+  renderCategories();
+}
+
+function viewItem(id) {
+  const item=[...saved,...samples]
+    .find(x=>x.id===id);
+  if(!item)return;
+  alert(
+    item.title+"\n"+
+    "$"+item.price+" CAD\n"+
+    item.type+"\n"+
+    item.location+"\n\n"+
+    (item.description||"No description")
+  );
+}
+
+function openPost() {
+  document.getElementById("postModal")
+    .classList.add("open");
+}
+function closePost() {
+  document.getElementById("postModal")
+    .classList.remove("open");
+}
+function showAll() {
+  mineOnly=false;
+  selected="All";
+  document.getElementById("search").value="";
+  render();
+}
+function showMine() {
+  mineOnly=true;
+  selected="All";
+  document.getElementById("search").value="";
+  render();
+}
+
+const photoInput=document.getElementById("itemPhoto");
+photoInput.addEventListener("change",()=>{
+  const file=photoInput.files[0];
+  if(!file)return;
+  const preview=document.getElementById("preview");
+  preview.src=URL.createObjectURL(file);
+  preview.style.display="block";
+});
+
+document.getElementById("postForm")
+  .addEventListener("submit",async e=>{
+  e.preventDefault();
+
+  const file=photoInput.files[0];
+  let photo="";
+
+  if(file) {
+    if(file.size>1500000) {
+      alert("Please choose a photo under 1.5 MB.");
+      return;
+    }
+    photo=await new Promise((resolve,reject)=>{
+      const reader=new FileReader();
+      reader.onload=()=>resolve(reader.result);
+      reader.onerror=reject;
+      reader.readAsDataURL(file);
+    });
+  }
+
+  const item={
+    id:"item"+Date.now(),
+    title:document.getElementById("itemTitle").value,
+    price:Number(document.getElementById("itemPrice").value),
+    category:document.getElementById("itemCategory").value,
+    type:document.getElementById("itemType").value,
+    location:document.getElementById("itemLocation").value,
+    description:document.getElementById("itemDescription").value,
+    photo
+  };
+
+  const next=[item,...saved];
+  try {
+    localStorage.setItem(
+      "tradeziesListings",JSON.stringify(next));
+  } catch(err) {
+    alert("Not enough browser storage. Try a smaller photo.");
+    return;
+  }
+
+  saved=next;
+  document.getElementById("postForm").reset();
+  document.getElementById("preview").style.display="none";
+  closePost();
+  showMine();
+  alert("Your listing was saved on this device!");
+});
+
+render();
+</script>
+</body>
+</html>
