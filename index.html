@@ -1,11 +1,25 @@
 
 <!DOCTYPE html>
 <html lang="en">
-<head>
+<head> 
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="theme-color" content="#101d20">
 <title>Tradezies | Buy. Sell. Trade.</title>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+
+<script>
+  const SUPABASE_URL = "https://gqwbinfpwuzlrqvxwaei.supabase.co";
+
+  const SUPABASE_KEY = "sb_publishable_-Ura08TBkxHYyMrCv4l4fw_yHnMs6sd";
+
+  const tradeziesDB = window.supabase.createClient(
+    SUPABASE_URL,
+    SUPABASE_KEY
+  );
+</script>
+
 <style>
 :root{
   --ink:#142529;
