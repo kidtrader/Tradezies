@@ -4,498 +4,1042 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Tradezies - Buy, Sell & Trade</title>
+<meta name="theme-color" content="#101d20">
+<title>Tradezies | Buy. Sell. Trade.</title>
 <style>
-:root {
-  --green:#21b66f;
-  --dark:#101b22;
-  --background:#f3f6f7;
+:root{
+  --ink:#142529;
+  --green:#24c783;
+  --deep:#101e21;
+  --paper:#f4f6f5;
+  --muted:#758286;
+  --line:#e6eae8;
 }
-* {box-sizing:border-box}
-body {
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
   margin:0;
-  font-family:Arial,sans-serif;
-  background:var(--background);
-  color:#18252b;
+  background:var(--paper);
+  color:var(--ink);
+  font-family:system-ui,-apple-system,Arial,sans-serif;
 }
-header {
-  background:var(--dark);
-  padding:18px 16px;
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
+button,input,select,textarea{font:inherit}
+button{cursor:pointer}
+button:focus-visible,input:focus-visible,
+select:focus-visible,textarea:focus-visible{
+  outline:3px solid var(--green);
+  outline-offset:2px;
 }
-.logo {
-  color:white;
-  font-size:29px;
-  font-weight:900;
-  letter-spacing:-1.2px;
-}
-.logo span {color:var(--green)}
-button {cursor:pointer;font-weight:bold}
-header button, .primary {
-  border:0;
-  border-radius:10px;
-  background:var(--green);
-  color:#072015;
-  padding:12px 17px;
-}
-.hero {
-  background:linear-gradient(135deg,#172c36,#0c171c);
-  color:white;
-  padding:34px 18px;
-  text-align:center;
-}
-.hero h1 {
-  font-size:30px;
-  margin:0 0 10px;
-}
-.hero p {color:#cbd6d8}
-.search {
-  display:flex;
-  max-width:600px;
-  margin:22px auto 0;
-  gap:8px;
-}
-input,select,textarea {
-  font:inherit;
-  border:1px solid #d2dadd;
-  border-radius:9px;
-  padding:13px;
-  width:100%;
-}
-.search input {flex:1;min-width:0}
-.search button {
-  background:var(--green);
-  border:0;
-  border-radius:9px;
-  padding:0 17px;
-}
-.container {
-  max-width:1100px;
-  margin:auto;
-  padding:22px 15px 95px;
-}
-.categories {
-  display:flex;
-  gap:9px;
-  overflow-x:auto;
-  padding:5px 0 18px;
-}
-.categories button {
-  flex-shrink:0;
-  border:1px solid #d7dfe0;
-  background:white;
-  border-radius:22px;
-  padding:11px 15px;
-}
-.categories button.active {
-  background:#d5f8e5;
-  border-color:var(--green);
-}
-.section-title {
+.topbar{
+  background:var(--deep);
   display:flex;
   justify-content:space-between;
   align-items:center;
   gap:12px;
+  padding:17px max(20px,calc((100vw - 1160px)/2));
 }
-.grid {
-  display:grid;
-  grid-template-columns:repeat(2,minmax(0,1fr));
-  gap:13px;
+.logo{
+  font-size:29px;
+  font-weight:900;
+  color:#fff;
+  letter-spacing:-1.6px;
 }
-.card {
-  background:white;
-  border-radius:13px;
+.logo span{color:var(--green)}
+.top-actions{display:flex;gap:10px}
+.top-actions button{
+  background:#26383b;
+  color:#fff;
+  border:0;
+  border-radius:14px;
+  padding:12px 15px;
+  font-weight:800;
+}
+.top-actions .sell{
+  background:var(--green);
+  color:#07291b;
+}
+.hero{
+  position:relative;
   overflow:hidden;
-  box-shadow:0 2px 10px #0000000b;
+  padding:58px 22px 65px;
+  background:linear-gradient(135deg,#142a2f,#0d191c);
+  color:white;
+  text-align:center;
 }
-.photo {
-  height:145px;
+.hero:before,.hero:after{
+  content:"";
+  position:absolute;
+  border:1px solid #ffffff18;
+  border-radius:50%;
+  width:450px;height:450px;
+  pointer-events:none;
+}
+.hero:before{left:-280px;top:-300px}
+.hero:after{right:-300px;bottom:-330px}
+.hero-inner{
+  position:relative;
+  z-index:1;
+  max-width:800px;
+  margin:auto;
+}
+.eyebrow{
+  display:inline-block;
+  border:1px solid #42dd9666;
+  background:#22c77e17;
+  color:#8deab7;
+  border-radius:40px;
+  font-size:12px;
+  font-weight:800;
+  padding:9px 14px;
+  letter-spacing:1.1px;
+}
+.hero h1{
+  margin:22px 0 14px;
+  font-size:clamp(39px,7vw,72px);
+  line-height:1.04;
+  letter-spacing:-2.8px;
+  font-weight:900;
+}
+.hero h1 span{color:var(--green)}
+.hero p{
+  color:#b8c9c8;
+  font-size:16px;
+  max-width:490px;
+  margin:0 auto 27px;
+  line-height:1.6;
+}
+.searchbox{
+  background:#fff;
+  padding:7px;
+  border-radius:20px;
+  display:flex;
+  gap:7px;
+  box-shadow:0 16px 40px #0003;
+  max-width:620px;
+  margin:auto;
+}
+.searchbox input{
+  flex:1;
+  min-width:0;
+  border:0;
+  outline:0;
+  padding:13px;
+  font-size:15px;
+  border-radius:12px;
+}
+.searchbox button{
+  border:0;
+  border-radius:14px;
+  background:var(--green);
+  color:#0c291e;
+  font-weight:900;
+  padding:12px 18px;
+}
+.stats{
+  display:flex;
+  justify-content:center;
+  gap:25px;
+  margin-top:27px;
+  font-size:12px;
+  color:#bed0cb;
+  flex-wrap:wrap;
+}
+.stats strong{color:#fff;font-size:15px}
+.wrap{
+  max-width:1160px;
+  padding:27px 18px 110px;
+  margin:auto;
+}
+.section-heading{
   display:flex;
   align-items:center;
-  justify-content:center;
-  font-size:60px;
-  background:#e6efec;
-  overflow:hidden;
+  justify-content:space-between;
+  gap:12px;
+  margin-bottom:17px;
 }
-.photo img {
+.section-heading h2{
+  margin:0;
+  font-size:23px;
+  letter-spacing:-.7px;
+}
+.subtle{color:var(--muted);font-size:13px}
+.categories{
+  display:grid;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:11px;
+  margin-bottom:35px;
+}
+.category{
+  background:white;
+  border:2px solid transparent;
+  border-radius:19px;
+  padding:19px 7px;
+  box-shadow:0 4px 15px #111b1708;
+  text-align:center;
+  color:var(--ink);
+  transition:.2s;
+}
+.category.active{
+  border-color:var(--green);
+  background:#eafff3;
+}
+.category .emoji{
+  display:block;
+  font-size:27px;
+  margin-bottom:7px;
+}
+.category strong{font-size:12px}
+.promo{
+  background:linear-gradient(115deg,#154d3b,#173a32);
+  border-radius:23px;
+  color:white;
+  padding:25px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:18px;
+  margin-bottom:34px;
+}
+.promo h2{
+  margin:0 0 7px;
+  letter-spacing:-.6px;
+}
+.promo p{
+  margin:0;
+  color:#bcdfce;
+  font-size:13px;
+}
+.promo button{
+  background:var(--green);
+  border:0;
+  color:#07341d;
+  font-weight:900;
+  padding:14px 18px;
+  border-radius:13px;
+  white-space:nowrap;
+}
+.filters{
+  display:flex;
+  gap:8px;
+  flex-wrap:wrap;
+  margin-bottom:20px;
+}
+.chip{
+  border:1px solid var(--line);
+  background:white;
+  border-radius:30px;
+  padding:10px 15px;
+  font-size:12px;
+  font-weight:800;
+  color:#485a5b;
+}
+.chip.active{
+  background:var(--deep);
+  color:white;
+}
+.grid{
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:14px;
+}
+.product{
+  background:white;
+  border-radius:20px;
+  overflow:hidden;
+  box-shadow:0 5px 22px #10231c0b;
+  transition:transform .2s,box-shadow .2s;
+}
+.product:hover{
+  transform:translateY(-3px);
+  box-shadow:0 9px 25px #10231c18;
+}
+.visual{
+  height:155px;
+  position:relative;
+  overflow:hidden;
+  display:grid;
+  place-items:center;
+}
+.visual .art{font-size:75px}
+.visual img{
   width:100%;
   height:100%;
   object-fit:cover;
 }
-.card-content {padding:13px}
-.price {
+.visual.Vehicles{
+  background:linear-gradient(140deg,#d6e6ec,#9aafb9);
+}
+.visual.Equipment{
+  background:linear-gradient(140deg,#eee4c7,#c3ae6d);
+}
+.visual.Electronics{
+  background:linear-gradient(140deg,#c9d7ee,#a0add4);
+}
+.visual.Home{
+  background:linear-gradient(140deg,#efd9d0,#cba99b);
+}
+.visual.Clothing{
+  background:linear-gradient(140deg,#ead2de,#cda3b7);
+}
+.visual.Other{
+  background:linear-gradient(140deg,#dbe6dc,#aecbb8);
+}
+.pill{
+  position:absolute;
+  left:10px;top:10px;
+  background:#ffffffeb;
+  border-radius:20px;
+  font-size:10px;
+  font-weight:900;
+  padding:7px 10px;
+}
+.heart{
+  position:absolute;
+  right:9px;top:9px;
+  border:0;
+  background:#ffffffed;
+  width:34px;height:34px;
+  border-radius:50%;
+  font-size:20px;
+}
+.heart.saved{color:#e94d64}
+.product-info{padding:14px}
+.price{
+  color:#118b58;
+  font-weight:900;
   font-size:21px;
-  font-weight:800;
-  color:#14844c;
+  letter-spacing:-.6px;
 }
-.card h3 {
-  font-size:15px;
-  margin:9px 0;
+.product h3{
+  font-size:14px;
+  line-height:1.35;
+  margin:8px 0;
+  min-height:38px;
 }
-.muted {color:#66757a;font-size:12px}
-.tag {
-  display:inline-block;
-  background:#e4f8ed;
-  color:#147c4b;
-  padding:5px 8px;
-  border-radius:6px;
+.location{
   font-size:11px;
-  margin-top:8px;
+  color:var(--muted);
 }
-.card button {
-  width:100%;
-  margin-top:12px;
-  padding:10px;
-  background:white;
-  border:1px solid var(--green);
-  color:#14844c;
+.trade-tag{
+  display:inline-block;
+  margin-top:11px;
+  padding:7px 10px;
+  background:#e7f8ed;
   border-radius:8px;
+  font-size:10px;
+  font-weight:900;
+  color:#187d50;
 }
-nav {
-  position:fixed;
-  bottom:0;
-  left:0;
-  right:0;
+.details{
+  width:100%;
+  border:1px solid #bdebd5;
   background:white;
-  border-top:1px solid #dfe5e6;
+  color:#128153;
+  border-radius:11px;
+  padding:11px;
+  margin-top:13px;
+  font-size:12px;
+  font-weight:900;
+}
+.empty{
+  grid-column:1/-1;
+  text-align:center;
+  padding:50px 20px;
+  color:var(--muted);
+}
+.bottomnav{
+  position:fixed;
+  bottom:0;left:0;right:0;
+  background:#fffffffa;
+  border-top:1px solid var(--line);
   display:flex;
   justify-content:space-around;
-  padding:12px 0;
-  z-index:5;
+  padding:11px 4px max(11px,env(safe-area-inset-bottom));
+  z-index:20;
+  box-shadow:0 -4px 22px #00000008;
 }
-nav button {
+.bottomnav button{
   background:none;
   border:0;
-  font-size:12px;
-  color:#324047;
+  color:#677a79;
+  font-size:10px;
+  font-weight:800;
+  min-width:58px;
 }
-.modal {
-  display:none;
+.bottomnav span{
+  display:block;
+  font-size:23px;
+  margin-bottom:4px;
+}
+.bottomnav .postnav{
+  background:var(--green);
+  color:#063a24;
+  border-radius:15px;
+  padding:7px 15px;
+  margin-top:-9px;
+}
+.modal{
   position:fixed;
   inset:0;
-  background:#0009;
-  z-index:10;
-  padding:16px;
-  overflow:auto;
-}
-.modal.open {display:block}
-.dialog {
-  background:white;
-  max-width:470px;
-  margin:30px auto;
-  border-radius:16px;
-  padding:22px;
-}
-.dialog input,.dialog select,
-.dialog textarea {margin:7px 0}
-.dialog .primary {width:100%;margin-top:12px}
-.close {
-  float:right;
-  border:0;
-  background:none;
-  font-size:25px;
-}
-#preview {
+  background:#061414ac;
+  z-index:50;
   display:none;
+  overflow:auto;
+  padding:20px;
+}
+.modal.open{display:block}
+.dialog{
+  background:white;
+  border-radius:25px;
+  max-width:500px;
+  margin:25px auto;
+  padding:24px;
+}
+.dialog h2{margin:6px 0}
+.dialog p{color:var(--muted);font-size:13px}
+.close{
+  float:right;
+  background:#edf1ef;
+  border:0;
+  width:34px;height:34px;
+  border-radius:50%;
+  font-size:22px;
+}
+.field{margin:15px 0}
+.field label{
+  display:block;
+  font-weight:800;
+  font-size:12px;
+  margin-bottom:7px;
+}
+.field input,.field select,.field textarea{
+  width:100%;
+  padding:13px;
+  border:1px solid #dbe3df;
+  border-radius:12px;
+  background:#fafcfb;
+}
+.primary{
+  width:100%;
+  border:0;
+  border-radius:13px;
+  background:var(--green);
+  color:#06351f;
+  font-weight:900;
+  padding:15px;
+}
+.preview{
+  max-height:150px;
   max-width:100%;
-  max-height:170px;
-  margin:10px auto;
-  border-radius:10px;
+  display:none;
+  border-radius:12px;
+  margin-top:10px;
 }
-.empty {
-  padding:35px;
+.detail-photo{
+  font-size:90px;
   text-align:center;
-  color:#637277;
+  border-radius:15px;
+  background:#eef4f0;
+  padding:20px;
+  margin:15px 0;
 }
-@media(min-width:700px) {
-  .grid {grid-template-columns:repeat(4,1fr)}
-  .photo {height:190px}
-  nav {display:none}
+.detail-photo img{
+  max-width:100%;
+  max-height:260px;
+  border-radius:12px;
+}
+.detail-description{
+  white-space:pre-wrap;
+  line-height:1.6;
+}
+@media(min-width:700px){
+  .categories{
+    grid-template-columns:repeat(6,minmax(0,1fr));
+  }
+  .grid{grid-template-columns:repeat(3,minmax(0,1fr))}
+  .visual{height:205px}
+}
+@media(min-width:1000px){
+  .grid{grid-template-columns:repeat(4,minmax(0,1fr))}
+  .bottomnav{display:none}
+}
+@media(max-width:380px){
+  .promo{flex-direction:column;align-items:flex-start}
+  .hero h1{font-size:37px}
+  .top-actions button{padding:10px;font-size:12px}
 }
 </style>
 </head>
 <body>
 
-<header>
+<header class="topbar">
   <div class="logo">Trade<span>zies</span></div>
-  <button onclick="openPost()">+ Sell / Trade</button>
+  <div class="top-actions">
+    <button onclick="showSaved()">♡ Saved</button>
+    <button class="sell" onclick="openPost()">+ Post Ad</button>
+  </div>
 </header>
 
 <section class="hero">
-  <h1>Buy it. Sell it. Trade it.</h1>
-  <p>Your community marketplace for great deals.</p>
-  <div class="search">
-    <input id="search" placeholder="What are you looking for?"
-      oninput="render()">
-    <button onclick="render()">Search</button>
+  <div class="hero-inner">
+    <div class="eyebrow">
+      THE BETTER WAY TO TRADE
+    </div>
+    <h1>
+      Find it. Love it.<br>
+      <span>Trade it.</span>
+    </h1>
+    <p>
+      Discover great deals, sell what you don't need,
+      and trade for something better.
+      Your next great find starts here.
+    </p>
+
+    <div class="searchbox">
+      <input id="search"
+        placeholder="Search cars, tools, electronics..."
+        oninput="render()"
+        aria-label="Search listings">
+      <button onclick="render()">Search</button>
+    </div>
+
+    <div class="stats">
+      <span>✦ <strong>Buy</strong> great deals</span>
+      <span>✦ <strong>Sell</strong> with ease</span>
+      <span>✦ <strong>Trade</strong> your way</span>
+    </div>
   </div>
 </section>
 
-<main class="container">
+<main class="wrap">
+  <div class="section-heading">
+    <h2>Explore Categories</h2>
+    <span class="subtle">Find your next deal</span>
+  </div>
+
   <div class="categories" id="categories"></div>
 
-  <div class="section-title">
-    <h2>Explore Listings</h2>
-    <span class="muted" id="count"></span>
+  <section class="promo">
+    <div>
+      <h2>Got something to trade?</h2>
+      <p>Turn what you have into what you want.</p>
+    </div>
+    <button onclick="openPost()">+ Create Listing</button>
+  </section>
+
+  <div class="section-heading">
+    <h2 id="listingHeading">Fresh Finds</h2>
+    <span class="subtle" id="count"></span>
+  </div>
+
+  <div class="filters">
+    <button class="chip active" data-filter="All"
+      onclick="chooseFilter('All')">All listings</button>
+    <button class="chip" data-filter="For Sale"
+      onclick="chooseFilter('For Sale')">For sale</button>
+    <button class="chip" data-filter="Trade"
+      onclick="chooseFilter('Trade')">Trades</button>
+    <button class="chip" data-filter="Sale or Trade"
+      onclick="chooseFilter('Sale or Trade')">
+      Sale or trade
+    </button>
   </div>
 
   <div class="grid" id="listings"></div>
 </main>
 
-<nav>
-  <button onclick="showAll()">🏠 Home</button>
-  <button onclick="document.getElementById('search').focus()">
-    🔎 Search
+<nav class="bottomnav">
+  <button onclick="showAll()">
+    <span>⌂</span>Home
   </button>
-  <button onclick="openPost()">➕ Post</button>
-  <button onclick="showMine()">👤 My Listings</button>
+  <button onclick="focusSearch()">
+    <span>⌕</span>Search
+  </button>
+  <button class="postnav" onclick="openPost()">
+    <span>＋</span>Post
+  </button>
+  <button onclick="showSaved()">
+    <span>♡</span>Saved
+  </button>
+  <button onclick="showMine()">
+    <span>♙</span>My Ads
+  </button>
 </nav>
 
 <div class="modal" id="postModal">
- <div class="dialog">
-  <button class="close" onclick="closePost()">×</button>
-  <h2>Post an Item</h2>
-  <p class="muted">Create a new Tradezies listing.</p>
-  <form id="postForm">
-    <input id="itemTitle" placeholder="Item title"
-      maxlength="80" required>
-    <input id="itemPrice" type="number" min="0"
-      step="0.01" placeholder="Price in CAD" required>
-    <select id="itemCategory">
-      <option>Vehicles</option>
-      <option>Equipment</option>
-      <option>Electronics</option>
-      <option>Home</option>
-      <option>Clothing</option>
-      <option>Other</option>
-    </select>
-    <select id="itemType">
-      <option value="For Sale">For Sale</option>
-      <option value="Trade">Trade</option>
-      <option value="Sale or Trade">Sale or Trade</option>
-    </select>
-    <input id="itemLocation"
-      placeholder="City or town" required>
-    <textarea id="itemDescription" rows="3"
-      placeholder="Describe your item"></textarea>
-    <label>Item photo</label>
-    <input type="file" id="itemPhoto"
-      accept="image/*">
-    <img id="preview" alt="Photo preview">
-    <button class="primary" type="submit">
-      Publish Listing
-    </button>
-  </form>
- </div>
+  <div class="dialog">
+    <button class="close"
+      onclick="closePost()" aria-label="Close">×</button>
+    <h2>Post a Listing</h2>
+    <p>What would you like to sell or trade?</p>
+
+    <form id="postForm">
+      <div class="field">
+        <label>Listing title</label>
+        <input id="itemTitle"
+          placeholder="e.g. 2020 Ram 2500"
+          maxlength="90" required>
+      </div>
+
+      <div class="field">
+        <label>Price (CAD)</label>
+        <input id="itemPrice" type="number"
+          min="0" max="100000000" step="0.01"
+          placeholder="e.g. 15000" required>
+      </div>
+
+      <div class="field">
+        <label>Category</label>
+        <select id="itemCategory">
+          <option>Vehicles</option>
+          <option>Equipment</option>
+          <option>Electronics</option>
+          <option>Home</option>
+          <option>Clothing</option>
+          <option>Other</option>
+        </select>
+      </div>
+
+      <div class="field">
+        <label>Listing type</label>
+        <select id="itemType">
+          <option>For Sale</option>
+          <option>Trade</option>
+          <option>Sale or Trade</option>
+        </select>
+      </div>
+
+      <div class="field">
+        <label>Location</label>
+        <input id="itemLocation"
+          placeholder="e.g. Leduc, Alberta"
+          maxlength="100" required>
+      </div>
+
+      <div class="field">
+        <label>Description</label>
+        <textarea id="itemDescription" rows="4"
+          placeholder="Tell buyers about your item..."
+          maxlength="3000"></textarea>
+      </div>
+
+      <div class="field">
+        <label>Add photo (under 1 MB)</label>
+        <input type="file" id="itemPhoto"
+          accept="image/*">
+        <img id="preview" class="preview"
+          alt="Photo preview">
+      </div>
+
+      <button class="primary" type="submit">
+        Publish Listing
+      </button>
+    </form>
+  </div>
+</div>
+
+<div class="modal" id="detailModal">
+  <div class="dialog">
+    <button class="close"
+      onclick="closeDetail()" aria-label="Close">×</button>
+    <div id="detailContent"></div>
+  </div>
 </div>
 
 <script>
-const categories = [
-  "All","Vehicles","Equipment","Electronics",
-  "Home","Clothing","Other"
+const categories=[
+  ["Vehicles","🚙"],
+  ["Equipment","🚜"],
+  ["Electronics","📱"],
+  ["Home","🛋️"],
+  ["Clothing","👟"],
+  ["Other","📦"]
 ];
-const emojis = {
-  Vehicles:"🚗",Equipment:"🚜",
-  Electronics:"📱",Home:"🏡",
-  Clothing:"👕",Other:"📦"
-};
 
-const samples = [
+const demo=[
   {
-    id:"demo1",title:"Pickup Truck",
-    price:18500,category:"Vehicles",
-    type:"Sale or Trade",location:"Edmonton, AB",
-    description:"Example vehicle listing."
+    id:"demo1",
+    title:"Ram 2500 Heavy Duty",
+    price:42900,
+    category:"Vehicles",
+    type:"Sale or Trade",
+    location:"Edmonton, AB",
+    icon:"🛻",
+    description:"Example listing for a heavy-duty pickup."
   },
   {
-    id:"demo2",title:"Skid Steer Loader",
-    price:12000,category:"Equipment",
-    type:"For Sale",location:"Leduc, AB",
-    description:"Example equipment listing."
+    id:"demo2",
+    title:"Skid Steer Loader",
+    price:14500,
+    category:"Equipment",
+    type:"Sale or Trade",
+    location:"Leduc, AB",
+    icon:"🚜",
+    description:"Example listing for a skid steer."
   },
   {
-    id:"demo3",title:"Gaming Console",
-    price:350,category:"Electronics",
-    type:"Trade",location:"Calgary, AB",
-    description:"Example electronics listing."
+    id:"demo3",
+    title:"Gaming Console Bundle",
+    price:650,
+    category:"Electronics",
+    type:"For Sale",
+    location:"Calgary, AB",
+    icon:"🎮",
+    description:"Example gaming bundle."
   },
   {
-    id:"demo4",title:"Living Room Sofa",
-    price:400,category:"Home",
-    type:"For Sale",location:"Edmonton, AB",
-    description:"Example furniture listing."
+    id:"demo4",
+    title:"Electric Dirt Bike",
+    price:4200,
+    category:"Vehicles",
+    type:"Trade",
+    location:"Red Deer, AB",
+    icon:"🏍️",
+    description:"Example electric dirt bike listing."
+  },
+  {
+    id:"demo5",
+    title:"Leather Living Room Sofa",
+    price:850,
+    category:"Home",
+    type:"For Sale",
+    location:"Edmonton, AB",
+    icon:"🛋️",
+    description:"Example sofa listing."
+  },
+  {
+    id:"demo6",
+    title:"Professional Tool Set",
+    price:1200,
+    category:"Equipment",
+    type:"Sale or Trade",
+    location:"Nisku, AB",
+    icon:"🧰",
+    description:"Example tools listing."
+  },
+  {
+    id:"demo7",
+    title:"Laptop Computer",
+    price:950,
+    category:"Electronics",
+    type:"For Sale",
+    location:"Sherwood Park, AB",
+    icon:"💻",
+    description:"Example laptop listing."
+  },
+  {
+    id:"demo8",
+    title:"Brand Name Sneakers",
+    price:125,
+    category:"Clothing",
+    type:"Trade",
+    location:"St. Albert, AB",
+    icon:"👟",
+    description:"Example clothing listing."
   }
 ];
 
-let selected="All";
-let mineOnly=false;
-let saved=[];
+const storageKey="tradezies-v2-listings";
+const savedKey="tradezies-v2-favourites";
 
-try {
-  saved=JSON.parse(
-    localStorage.getItem("tradeziesListings")||"[]"
-  );
-  if(!Array.isArray(saved)) saved=[];
-} catch(e) {
-  saved=[];
+function load(key){
+  try{
+    const data=JSON.parse(localStorage.getItem(key)||"[]");
+    return Array.isArray(data)?data:[];
+  }catch(e){return []}
 }
 
-function escapeHTML(value) {
-  return String(value).replace(/[&<>"']/g,
-    c=>({
-      "&":"&amp;","<":"&lt;",">":"&gt;",
-      '"':"&quot;","'":"&#39;"
-    })[c]
-  );
+let myListings=load(storageKey);
+let favourites=load(savedKey);
+let category="All";
+let filter="All";
+let view="All";
+
+const $=id=>document.getElementById(id);
+
+function safe(v){
+  return String(v??"").replace(/[&<>"']/g,c=>({
+    "&":"&amp;",
+    "<":"&lt;",
+    ">":"&gt;",
+    '"':"&quot;",
+    "'":"&#39;"
+  })[c]);
 }
 
-function renderCategories() {
-  document.getElementById("categories").innerHTML=
-    categories.map(c=>`
-      <button class="${c===selected?'active':''}"
-        onclick="chooseCategory('${c}')">
-        ${c}
-      </button>
-    `).join("");
+function money(n){
+  return Number(n).toLocaleString("en-CA",{
+    style:"currency",
+    currency:"CAD",
+    maximumFractionDigits:2
+  });
 }
 
-function chooseCategory(c) {
-  selected=c;
+function allItems(){
+  return [...myListings,...demo];
+}
+
+function getItem(id){
+  return allItems().find(x=>x.id===id);
+}
+
+function drawCategories(){
+  $("categories").innerHTML=categories.map(([name,icon])=>`
+    <button class="category
+      ${category===name?"active":""}"
+      onclick="chooseCategory('${name}')">
+      <span class="emoji">${icon}</span>
+      <strong>${name}</strong>
+    </button>
+  `).join("");
+}
+
+function chooseCategory(c){
+  category=category===c?"All":c;
+  view="All";
   render();
 }
 
-function render() {
-  const q=document.getElementById("search")
-    .value.toLowerCase().trim();
-  const data=mineOnly?saved:[...saved,...samples];
+function chooseFilter(f){
+  filter=f;
+  render();
+}
 
-  const filtered=data.filter(item=>
-    (selected==="All"||item.category===selected) &&
-    (item.title+" "+item.description+" "+
-      item.location).toLowerCase().includes(q)
-  );
+function setHeading(){
+  $("listingHeading").textContent=
+    view==="Mine"?"My Listings":
+    view==="Saved"?"Saved Items":
+    "Fresh Finds";
+}
 
-  document.getElementById("count").textContent=
-    filtered.length+" items";
+function render(){
+  let data=allItems();
 
-  document.getElementById("listings").innerHTML=
-    filtered.length
-    ? filtered.map(item=>`
-      <article class="card">
-        <div class="photo">
-          ${item.photo
-            ? `<img src="${item.photo}" alt="Item photo">`
-            : emojis[item.category]||"📦"}
-        </div>
-        <div class="card-content">
-          <div class="price">
-            $${Number(item.price).toLocaleString(
-              "en-CA",{maximumFractionDigits:2})}
-          </div>
-          <h3>${escapeHTML(item.title)}</h3>
-          <div class="muted">
-            📍 ${escapeHTML(item.location)}
-          </div>
-          <span class="tag">${escapeHTML(item.type)}</span>
-          <button onclick="viewItem('${item.id}')">
-            View Details
+  if(view==="Mine"){
+    data=[...myListings];
+  }else if(view==="Saved"){
+    data=data.filter(x=>favourites.includes(x.id));
+  }
+
+  const q=$("search").value.toLowerCase().trim();
+
+  data=data.filter(item=>{
+    const matchesCategory=
+      category==="All"||item.category===category;
+    const matchesFilter=
+      filter==="All"||item.type===filter;
+    const text=[
+      item.title,item.description,item.location,
+      item.category
+    ].join(" ").toLowerCase();
+    return matchesCategory&&matchesFilter&&text.includes(q);
+  });
+
+  $("count").textContent=data.length+" listings";
+  setHeading();
+  drawCategories();
+
+  document.querySelectorAll(".chip").forEach(btn=>{
+    btn.classList.toggle(
+      "active",btn.dataset.filter===filter
+    );
+  });
+
+  if(!data.length){
+    $("listings").innerHTML=`
+      <div class="empty">
+        <h3>No listings found</h3>
+        <p>Try another search or post the first item.</p>
+      </div>`;
+    return;
+  }
+
+  $("listings").innerHTML=data.map(item=>{
+    const fav=favourites.includes(item.id);
+    const image=item.photo
+      ?`<img src="${item.photo}" alt="Listing photo">`
+      :`<span class="art">${safe(item.icon||"📦")}</span>`;
+
+    return `
+      <article class="product">
+        <div class="visual ${safe(item.category)}">
+          ${image}
+          <span class="pill">
+            ${safe(item.type)}
+          </span>
+          <button class="heart ${fav?"saved":""}"
+            data-id="${safe(item.id)}"
+            onclick="toggleFavourite(this.dataset.id)"
+            aria-label="Toggle favourite">
+            ${fav?"♥":"♡"}
           </button>
         </div>
-      </article>
-    `).join("")
-    : '<div class="empty">No listings found.</div>';
-
-  renderCategories();
+        <div class="product-info">
+          <div class="price">${money(item.price)}</div>
+          <h3>${safe(item.title)}</h3>
+          <div class="location">
+            📍 ${safe(item.location)}
+          </div>
+          <div class="trade-tag">${safe(item.type)}</div>
+          <button class="details"
+            data-id="${safe(item.id)}"
+            onclick="openDetail(this.dataset.id)">
+            View Listing →
+          </button>
+        </div>
+      </article>`;
+  }).join("");
 }
 
-function viewItem(id) {
-  const item=[...saved,...samples]
-    .find(x=>x.id===id);
+function toggleFavourite(id){
+  if(favourites.includes(id)){
+    favourites=favourites.filter(x=>x!==id);
+  }else{
+    favourites.push(id);
+  }
+  localStorage.setItem(savedKey,JSON.stringify(favourites));
+  render();
+}
+
+function showAll(){
+  view="All";
+  category="All";
+  filter="All";
+  $("search").value="";
+  render();
+  window.scrollTo({top:0,behavior:"smooth"});
+}
+
+function showMine(){
+  view="Mine";
+  category="All";
+  filter="All";
+  $("search").value="";
+  render();
+  $("listingHeading").scrollIntoView({behavior:"smooth"});
+}
+
+function showSaved(){
+  view="Saved";
+  category="All";
+  filter="All";
+  $("search").value="";
+  render();
+  $("listingHeading").scrollIntoView({behavior:"smooth"});
+}
+
+function focusSearch(){
+  window.scrollTo({top:0,behavior:"smooth"});
+  $("search").focus();
+}
+
+function openPost(){
+  $("postModal").classList.add("open");
+}
+function closePost(){
+  $("postModal").classList.remove("open");
+}
+
+function openDetail(id){
+  const item=getItem(id);
   if(!item)return;
-  alert(
-    item.title+"\n"+
-    "$"+item.price+" CAD\n"+
-    item.type+"\n"+
-    item.location+"\n\n"+
-    (item.description||"No description")
-  );
+
+  const visual=item.photo
+    ?`<img src="${item.photo}" alt="Listing photo">`
+    :safe(item.icon||"📦");
+
+  $("detailContent").innerHTML=`
+    <h2>${safe(item.title)}</h2>
+    <div class="detail-photo">${visual}</div>
+    <h2 style="color:#118b58">${money(item.price)}</h2>
+    <p>📍 ${safe(item.location)}</p>
+    <p><strong>${safe(item.type)}</strong></p>
+    <p class="detail-description">
+      ${safe(item.description||"No description provided.")}
+    </p>
+    <p class="subtle">
+      ${item.id.startsWith("demo")
+      ?"Demonstration listing — not a real seller."
+      :"Saved locally on this device."}
+    </p>
+    <button class="primary"
+      onclick="closeDetail()">
+      Back to Listings
+    </button>
+  `;
+  $("detailModal").classList.add("open");
 }
 
-function openPost() {
-  document.getElementById("postModal")
-    .classList.add("open");
-}
-function closePost() {
-  document.getElementById("postModal")
-    .classList.remove("open");
-}
-function showAll() {
-  mineOnly=false;
-  selected="All";
-  document.getElementById("search").value="";
-  render();
-}
-function showMine() {
-  mineOnly=true;
-  selected="All";
-  document.getElementById("search").value="";
-  render();
+function closeDetail(){
+  $("detailModal").classList.remove("open");
 }
 
-const photoInput=document.getElementById("itemPhoto");
-photoInput.addEventListener("change",()=>{
-  const file=photoInput.files[0];
+$("itemPhoto").addEventListener("change",()=>{
+  const file=$("itemPhoto").files[0];
   if(!file)return;
-  const preview=document.getElementById("preview");
+  const preview=$("preview");
   preview.src=URL.createObjectURL(file);
   preview.style.display="block";
 });
 
-document.getElementById("postForm")
-  .addEventListener("submit",async e=>{
+$("postForm").addEventListener("submit",async e=>{
   e.preventDefault();
-
-  const file=photoInput.files[0];
+  const file=$("itemPhoto").files[0];
   let photo="";
 
-  if(file) {
-    if(file.size>1500000) {
-      alert("Please choose a photo under 1.5 MB.");
+  if(file){
+    if(!file.type.startsWith("image/")){
+      alert("Please select an image file.");
       return;
     }
-    photo=await new Promise((resolve,reject)=>{
-      const reader=new FileReader();
-      reader.onload=()=>resolve(reader.result);
-      reader.onerror=reject;
-      reader.readAsDataURL(file);
-    });
+    if(file.size>1000000){
+      alert("Please select an image smaller than 1 MB.");
+      return;
+    }
+    try{
+      photo=await new Promise((resolve,reject)=>{
+        const reader=new FileReader();
+        reader.onload=()=>resolve(reader.result);
+        reader.onerror=reject;
+        reader.readAsDataURL(file);
+      });
+    }catch(err){
+      alert("The photo could not be read.");
+      return;
+    }
   }
 
   const item={
-    id:"item"+Date.now(),
-    title:document.getElementById("itemTitle").value,
-    price:Number(document.getElementById("itemPrice").value),
-    category:document.getElementById("itemCategory").value,
-    type:document.getElementById("itemType").value,
-    location:document.getElementById("itemLocation").value,
-    description:document.getElementById("itemDescription").value,
+    id:"user-"+Date.now(),
+    title:$("itemTitle").value.trim(),
+    price:Number($("itemPrice").value),
+    category:$("itemCategory").value,
+    type:$("itemType").value,
+    location:$("itemLocation").value.trim(),
+    description:$("itemDescription").value.trim(),
+    icon:"📦",
     photo
   };
 
-  const next=[item,...saved];
-  try {
-    localStorage.setItem(
-      "tradeziesListings",JSON.stringify(next));
-  } catch(err) {
-    alert("Not enough browser storage. Try a smaller photo.");
+  if(!item.title||!item.location||
+     !Number.isFinite(item.price)||item.price<0){
+    alert("Please complete the required fields.");
     return;
   }
 
-  saved=next;
-  document.getElementById("postForm").reset();
-  document.getElementById("preview").style.display="none";
+  const updated=[item,...myListings];
+  try{
+    localStorage.setItem(
+      storageKey,JSON.stringify(updated)
+    );
+  }catch(err){
+    alert("Device storage is full. Try a smaller photo.");
+    return;
+  }
+
+  myListings=updated;
+  $("postForm").reset();
+  $("preview").style.display="none";
   closePost();
   showMine();
   alert("Your listing was saved on this device!");
