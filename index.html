@@ -20,6 +20,139 @@
   );
 </script>
 
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  const actions = document.querySelector(".top-actions");
+  const accountButton = document.createElement("button");
+  accountButton.id = "accountButton";
+  accountButton.textContent = "Sign In";
+  actions.prepend(accountButton);
+
+  const modal = document.createElement("div");
+  modal.className = "modal";
+  modal.id = "accountModal";
+  modal.innerHTML = `
+    <div class="dialog">
+      <button class="close" id="closeAccount">×</button>
+      <h2>Welcome to Tradezies</h2>
+      <p>Create your account or sign in.</p>
+      <form id="accountForm">
+        <div class="field">
+          <label for="accountEmail">Email</label>
+          <input id="accountEmail" type="email"
+                 autocomplete="email" required>
+        </div>
+        <div class="field">
+          <label for="accountPassword">Password</label>
+          <input id="accountPassword" type="password"
+                 minlength="6" required>
+        </div>
+        <button class="primary" type="submit">
+          Sign In
+        </button>
+      </form>
+      <p id="accountMessage" role="status"></p>
+      <button id="switchAccount" class="details"
+              type="button">Create an account</button>
+    </div>
+  `;
+  document.body.append(modal);
+
+  let signupMode = false;
+  let currentUser = null;
+
+  function updateAccount(user) {
+    currentUser = user;
+    accountButton.textContent =
+      user ? "My Account" : "Sign In";
+  }
+
+  function closeAccount() {
+    modal.classList.remove("open");
+  }
+
+  function showAccount() {
+    if (currentUser) {
+      if (confirm("Sign out of Tradezies?")) {
+        tradeziesDB.auth.signOut().then(({error}) => {
+          if (error) alert(error.message);
+        });
+      }
+    } else {
+      modal.classList.add("open");
+    }
+  }
+
+  accountButton.addEventListener("click", showAccount);
+  document.getElementById("closeAccount")
+    .addEventListener("click", closeAccount);
+
+  document.getElementById("switchAccount")
+    .addEventListener("click", () => {
+      signupMode = !signupMode;
+      modal.querySelector('button[type="submit"]')
+        .textContent = signupMode ? "Create Account" : "Sign In";
+      document.getElementById("switchAccount")
+        .textContent = signupMode
+          ? "Already have an account? Sign In"
+          : "Create an account";
+      document.getElementById("accountMessage")
+        .textContent = "";
+    });
+
+  document.getElementById("accountForm")
+    .addEventListener("submit", async event => {
+      event.preventDefault();
+      const email = document.getElementById("accountEmail").value;
+      const password =
+        document.getElementById("accountPassword").value;
+      const message = document.getElementById("accountMessage");
+      const submit = modal.querySelector('button[type="submit"]');
+
+      submit.disabled = true;
+      message.textContent = "Please wait...";
+
+      try {
+        const result = signupMode
+          ? await tradeziesDB.auth.signUp({
+              email,
+              password,
+              options: {
+                emailRedirectTo:
+                  "https://kidtrader.github.io/Tradezies/"
+              }
+            })
+          : await tradeziesDB.auth.signInWithPassword({
+              email,
+              password
+            });
+
+        if (result.error) throw result.error;
+
+        if (signupMode) {
+          message.textContent =
+            "Check your email to confirm your account.";
+        } else {
+          message.textContent = "Signed in successfully!";
+          closeAccount();
+        }
+      } catch (error) {
+        message.textContent = error.message;
+      } finally {
+        submit.disabled = false;
+      }
+    });
+
+  tradeziesDB.auth.getUser().then(({data}) => {
+    updateAccount(data.user);
+  });
+
+  tradeziesDB.auth.onAuthStateChange((_event, session) => {
+    updateAccount(session?.user ?? null);
+  });
+});
+</script>
+
 <style>
 :root{
   --ink:#142529;
