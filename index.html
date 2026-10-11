@@ -1139,8 +1139,8 @@ $("postForm").addEventListener("submit",async e=>{
       alert("Please select an image file.");
       return;
     }
-    if(file.size>1000000){
-      alert("Please select an image smaller than 1 MB.");
+    if(file.size>10000000){
+      alert("Please select an image smaller than 10 MB.");
       return;
     }
     try{
