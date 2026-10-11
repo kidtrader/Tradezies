@@ -1140,9 +1140,9 @@ $("postForm").addEventListener("submit",async e=>{
       return;
     }
     if(file.size>10000000){
-      alert("Please select an image smaller than 10 MB.");
-      return;
-    }
+  alert("Please select an image smaller than 10 MB.");
+  return;
+}
     try{
       photo=await new Promise((resolve,reject)=>{
         const reader=new FileReader();
