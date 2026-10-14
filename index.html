@@ -1197,5 +1197,478 @@ $("postForm").addEventListener("submit",async e=>{
 
 render();
 </script>
+
+<!-- TRADEZIES MARKETPLACE FILTERS -->
+<style>
+#tz-filter-launch {
+  display:flex; align-items:center; gap:9px;
+  background:#f1f3f5; border:0; border-radius:14px;
+  padding:12px 18px; font:600 16px Arial;
+  color:#17201c; cursor:pointer;
+}
+#tz-filter-launch svg {width:21px;height:21px}
+#tz-filter-overlay {
+  display:none; position:fixed; inset:0;
+  background:rgba(0,0,0,.42); z-index:99998;
+}
+#tz-filter-overlay.open {display:block}
+#tz-filter-panel {
+  position:fixed; left:0; right:0; bottom:0;
+  max-width:650px; margin:auto; height:82dvh;
+  background:white; border-radius:28px 28px 0 0;
+  z-index:99999; display:none; flex-direction:column;
+  color:#111; font:16px Arial,sans-serif;
+  box-shadow:0 -8px 35px #0002;
+}
+#tz-filter-panel.open {display:flex}
+#tz-filter-panel * {box-sizing:border-box}
+.tz-handle {
+  width:44px;height:5px;background:#999;
+  border-radius:8px;margin:12px auto 9px;
+}
+.tz-filter-head {
+  display:flex;align-items:center;justify-content:space-between;
+  padding:12px 20px 18px;border-bottom:1px solid #eee;
+}
+.tz-filter-head strong {font-size:23px}
+.tz-text-button {
+  background:none;border:0;color:#555;
+  font-size:16px;cursor:pointer;padding:8px;
+}
+#tz-filter-reset {color:#168348}
+.tz-filter-scroll {overflow-y:auto;flex:1}
+.tz-filter-group {
+  border-bottom:1px solid #eee;
+}
+.tz-filter-group summary {
+  list-style:none; display:flex;align-items:center;
+  justify-content:space-between;cursor:pointer;
+  min-height:88px;padding:17px 24px;
+}
+.tz-filter-group summary::-webkit-details-marker {display:none}
+.tz-filter-group summary:after {
+  content:"›";font-size:34px;color:#666;
+  transition:transform .2s;
+}
+.tz-filter-group[open] summary:after {
+  transform:rotate(90deg);
+}
+.tz-filter-label {
+  display:flex;flex-direction:column;gap:5px;
+}
+.tz-filter-label strong {font-size:21px;font-weight:650}
+.tz-filter-label small {font-size:14px;color:#777}
+.tz-filter-fields {
+  padding:0 24px 20px;display:grid;gap:12px;
+}
+.tz-filter-fields select,
+.tz-filter-fields input {
+  width:100%;padding:13px;border:1px solid #d4d4d4;
+  border-radius:10px;background:white;color:#222;
+  font-size:16px;
+}
+.tz-price-grid {
+  display:grid;grid-template-columns:1fr 1fr;gap:12px;
+}
+.tz-filter-footer {
+  padding:16px 22px max(19px,env(safe-area-inset-bottom));
+  border-top:1px solid #eee;background:#fff;
+}
+#tz-filter-apply {
+  width:100%;border:0;border-radius:12px;
+  background:#168348;color:white;
+  padding:16px;font-size:19px;font-weight:700;
+  cursor:pointer;
+}
+#tz-filter-panel button:focus-visible,
+#tz-filter-panel input:focus-visible,
+#tz-filter-panel select:focus-visible {
+  outline:3px solid #168348;outline-offset:2px;
+}
+body.tz-filters-open {overflow:hidden}
+@media(min-width:750px){
+  #tz-filter-panel {height:min(750px,86dvh)}
+}
+</style>
+
+<div id="tz-filter-overlay"></div>
+
+<section id="tz-filter-panel"
+  role="dialog" aria-modal="true"
+  aria-label="Search filters">
+
+  <div class="tz-handle"></div>
+
+  <div class="tz-filter-head">
+    <button class="tz-text-button" id="tz-filter-back"
+      type="button">← Back</button>
+    <strong>Filters</strong>
+    <button class="tz-text-button" id="tz-filter-reset"
+      type="button">Reset all</button>
+  </div>
+
+  <div class="tz-filter-scroll">
+
+    <details class="tz-filter-group">
+      <summary>
+        <span class="tz-filter-label">
+          <strong>Price</strong>
+          <small id="tz-price-label">Any</small>
+        </span>
+      </summary>
+      <div class="tz-filter-fields tz-price-grid">
+        <input type="number" id="tz-min-price"
+          min="0" placeholder="Min $">
+        <input type="number" id="tz-max-price"
+          min="0" placeholder="Max $">
+      </div>
+    </details>
+
+    <details class="tz-filter-group">
+      <summary>
+        <span class="tz-filter-label">
+          <strong>Condition</strong>
+          <small id="tz-condition-label">Any</small>
+        </span>
+      </summary>
+      <div class="tz-filter-fields">
+        <select id="tz-condition">
+          <option value="">Any condition</option>
+          <option value="new">New</option>
+          <option value="like new">Like new</option>
+          <option value="good">Good</option>
+          <option value="fair">Fair</option>
+          <option value="for parts">For parts</option>
+        </select>
+      </div>
+    </details>
+
+    <details class="tz-filter-group">
+      <summary>
+        <span class="tz-filter-label">
+          <strong>Date listed</strong>
+          <small id="tz-date-label">Any</small>
+        </span>
+      </summary>
+      <div class="tz-filter-fields">
+        <select id="tz-date">
+          <option value="">Any time</option>
+          <option value="1">Last 24 hours</option>
+          <option value="7">Last 7 days</option>
+          <option value="30">Last 30 days</option>
+          <option value="90">Last 90 days</option>
+        </select>
+      </div>
+    </details>
+
+    <details class="tz-filter-group">
+      <summary>
+        <span class="tz-filter-label">
+          <strong>Category</strong>
+          <small id="tz-category-label">All</small>
+        </span>
+      </summary>
+      <div class="tz-filter-fields">
+        <select id="tz-category">
+          <option value="">All categories</option>
+          <option>Vehicles</option>
+          <option>Heavy Equipment</option>
+          <option>Tools</option>
+          <option>Electronics</option>
+          <option>Home & Garden</option>
+          <option>Furniture</option>
+          <option>Clothing</option>
+          <option>Sports & Outdoors</option>
+          <option>Collectibles</option>
+          <option>Other</option>
+        </select>
+      </div>
+    </details>
+
+    <details class="tz-filter-group">
+      <summary>
+        <span class="tz-filter-label">
+          <strong>Availability</strong>
+          <small id="tz-availability-label">Available</small>
+        </span>
+      </summary>
+      <div class="tz-filter-fields">
+        <select id="tz-availability">
+          <option value="available">Available</option>
+          <option value="">All items</option>
+          <option value="pending">Pending</option>
+          <option value="sold">Sold</option>
+        </select>
+      </div>
+    </details>
+
+    <details class="tz-filter-group">
+      <summary>
+        <span class="tz-filter-label">
+          <strong>Color</strong>
+          <small id="tz-color-label">Any</small>
+        </span>
+      </summary>
+      <div class="tz-filter-fields">
+        <select id="tz-color">
+          <option value="">Any color</option>
+          <option>Black</option><option>White</option>
+          <option>Red</option><option>Blue</option>
+          <option>Green</option><option>Yellow</option>
+          <option>Grey</option><option>Silver</option>
+          <option>Brown</option><option>Other</option>
+        </select>
+      </div>
+    </details>
+
+    <details class="tz-filter-group">
+      <summary>
+        <span class="tz-filter-label">
+          <strong>Brand</strong>
+          <small id="tz-brand-label">Any</small>
+        </span>
+      </summary>
+      <div class="tz-filter-fields">
+        <input id="tz-brand" type="text"
+          placeholder="Enter brand, e.g. Bobcat">
+      </div>
+    </details>
+
+    <details class="tz-filter-group">
+      <summary>
+        <span class="tz-filter-label">
+          <strong>Material</strong>
+          <small id="tz-material-label">Any</small>
+        </span>
+      </summary>
+      <div class="tz-filter-fields">
+        <select id="tz-material">
+          <option value="">Any material</option>
+          <option>Steel</option><option>Aluminum</option>
+          <option>Wood</option><option>Plastic</option>
+          <option>Leather</option><option>Fabric</option>
+          <option>Other</option>
+        </select>
+      </div>
+    </details>
+
+  </div>
+
+  <div class="tz-filter-footer">
+    <button type="button" id="tz-filter-apply">
+      See items
+    </button>
+  </div>
+</section>
+
+<script>
+(function () {
+  "use strict";
+
+  const $ = id => document.getElementById(id);
+  const overlay = $("tz-filter-overlay");
+  const panel = $("tz-filter-panel");
+
+  // Add filter button near existing search box.
+  const button = document.createElement("button");
+  button.id = "tz-filter-launch";
+  button.type = "button";
+  button.innerHTML =
+    '<svg viewBox="0 0 24 24" fill="none" ' +
+    'stroke="currentColor" stroke-width="2.3">' +
+    '<path d="M4 7h16M4 17h16"/>' +
+    '<circle cx="9" cy="7" r="2" fill="white"/>' +
+    '<circle cx="16" cy="17" r="2" fill="white"/>' +
+    '</svg><span>Filters</span>';
+
+  const search = document.querySelector(
+    'input[type="search"],' +
+    'input[placeholder*="Search"],' +
+    'input[placeholder*="search"]'
+  );
+
+  if (search && search.parentElement) {
+    search.parentElement.insertAdjacentElement(
+      "afterend", button
+    );
+  } else {
+    button.style.position = "fixed";
+    button.style.right = "15px";
+    button.style.bottom = "85px";
+    button.style.zIndex = "100";
+    document.body.appendChild(button);
+  }
+
+  function openFilters() {
+    overlay.classList.add("open");
+    panel.classList.add("open");
+    document.body.classList.add("tz-filters-open");
+    $("tz-filter-back").focus();
+  }
+
+  function closeFilters() {
+    overlay.classList.remove("open");
+    panel.classList.remove("open");
+    document.body.classList.remove("tz-filters-open");
+    button.focus();
+  }
+
+  button.addEventListener("click", openFilters);
+  overlay.addEventListener("click", closeFilters);
+  $("tz-filter-back").addEventListener("click", closeFilters);
+
+  document.addEventListener("keydown", e => {
+    if (e.key === "Escape" &&
+        panel.classList.contains("open")) {
+      closeFilters();
+    }
+  });
+
+  const fields = [
+    "condition", "date", "category", "availability",
+    "color", "brand", "material"
+  ];
+
+  function getFilters() {
+    return {
+      minPrice: $("tz-min-price").value,
+      maxPrice: $("tz-max-price").value,
+      condition: $("tz-condition").value,
+      date: $("tz-date").value,
+      category: $("tz-category").value,
+      availability: $("tz-availability").value,
+      color: $("tz-color").value,
+      brand: $("tz-brand").value.trim(),
+      material: $("tz-material").value
+    };
+  }
+
+  function updateLabels() {
+    const f = getFilters();
+
+    $("tz-price-label").textContent =
+      f.minPrice || f.maxPrice ?
+      "$" + (f.minPrice || "0") + " - $" +
+      (f.maxPrice || "Any") : "Any";
+
+    fields.forEach(id => {
+      const el = $("tz-" + id);
+      const selected = el.tagName === "SELECT" ?
+        el.options[el.selectedIndex].text :
+        el.value.trim();
+
+      const defaults = {
+        category: "All",
+        availability: "Available"
+      };
+
+      $("tz-" + id + "-label").textContent =
+        selected || defaults[id] || "Any";
+    });
+  }
+
+  document.querySelectorAll(
+    '#tz-filter-panel input,' +
+    '#tz-filter-panel select'
+  ).forEach(el => {
+    el.addEventListener("input", updateLabels);
+    el.addEventListener("change", updateLabels);
+  });
+
+  $("tz-filter-reset").addEventListener("click", () => {
+    document.querySelectorAll(
+      '#tz-filter-panel input'
+    ).forEach(el => el.value = "");
+
+    document.querySelectorAll(
+      '#tz-filter-panel select'
+    ).forEach(el => el.selectedIndex = 0);
+
+    updateLabels();
+  });
+
+  function matches(item, f) {
+    const d = item.dataset;
+    const price = Number(d.price);
+    const lower = value =>
+      String(value || "").trim().toLowerCase();
+
+    if (f.minPrice !== "" || f.maxPrice !== "") {
+      if (!d.price || !Number.isFinite(price)) return false;
+      if (f.minPrice !== "" && price < Number(f.minPrice))
+        return false;
+      if (f.maxPrice !== "" && price > Number(f.maxPrice))
+        return false;
+    }
+
+    const attributes = [
+      "condition", "category", "availability",
+      "color", "brand", "material"
+    ];
+
+    for (const key of attributes) {
+      if (!f[key]) continue;
+      if (!d[key]) return false;
+
+      if (key === "brand") {
+        if (!lower(d[key]).includes(lower(f[key])))
+          return false;
+      } else if (lower(d[key]) !== lower(f[key])) {
+        return false;
+      }
+    }
+
+    if (f.date) {
+      if (!d.listedAt) return false;
+      const date = new Date(d.listedAt);
+      if (Number.isNaN(date.getTime())) return false;
+
+      const age = (Date.now() - date.getTime()) / 86400000;
+      if (age > Number(f.date) || age < 0)
+        return false;
+    }
+
+    return true;
+  }
+
+  $("tz-filter-apply").addEventListener("click", () => {
+    const f = getFilters();
+
+    if (f.minPrice !== "" && f.maxPrice !== "" &&
+        Number(f.minPrice) > Number(f.maxPrice)) {
+      alert("Minimum price cannot exceed maximum price.");
+      return;
+    }
+
+    // Supports cards with class tradezies-listing
+    // and metadata in data-* attributes.
+    const cards = document.querySelectorAll(
+      ".tradezies-listing[data-price]"
+    );
+
+    let count = 0;
+
+    cards.forEach(card => {
+      const visible = matches(card, f);
+      card.hidden = !visible;
+      card.style.display = visible ? "" : "none";
+      if (visible) count++;
+    });
+
+    // Other app code can listen for this event to
+    // run a Supabase query using the filters.
+    window.dispatchEvent(new CustomEvent(
+      "tradezies:filters-applied",
+      {detail: {filters:f, count:count}}
+    ));
+
+    closeFilters();
+  });
+
+  updateLabels();
+})();
+</script>
+<!-- END TRADEZIES MARKETPLACE FILTERS -->
+
 </body>
 </html>
